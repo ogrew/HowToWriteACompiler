@@ -106,7 +106,7 @@ func tokenize() []*Token {
 		case ' ', '\t', 'n':
 			continue
 		default:
-			panic(fmt.Sprintf("tokenize error: Invalid Input: '%c'", char))
+			panic(fmt.Sprintf("tokenize error! Invalid Input: '%c'", char))
 		}
 	}
 
@@ -133,7 +133,7 @@ func parseUnaryExpr() *Expr {
 			operand:  operand,
 		}
 	default:
-		return nil
+		panic("Unexpected token kind:" + token.kind)
 	}
 }
 
@@ -156,7 +156,7 @@ func parse() *Expr {
 				right:    parseUnaryExpr(),
 			}
 		default:
-			return expr
+			panic("Unexpected token value:" + token.value)
 		}
 	}
 }
@@ -173,7 +173,7 @@ func generateExpr(expr *Expr) {
 		case "+":
 			fmt.Printf("  mov $+%d, %%rax\n", expr.operand.intval)
 		default:
-			panic("generator: Unknown unary operator:" + expr.operator)
+			panic("generator error! Unknown unary operator:" + expr.operator)
 		}
 	case "binary":
 		fmt.Printf("  mov $%d, %%rax\n", expr.left.intval)
@@ -187,10 +187,10 @@ func generateExpr(expr *Expr) {
 		case "*":
 			fmt.Printf("  imul %%rcx, %%rax\n")
 		default:
-			panic("generator: Unknown binary operator:" + expr.operator)
+			panic("generator error! Unknown binary operator:" + expr.operator)
 		}
 	default:
-		panic("generator: Unknown expr.kind:" + expr.kind)
+		panic("generator error! Unknown expr.kind:" + expr.kind)
 	}
 }
 
