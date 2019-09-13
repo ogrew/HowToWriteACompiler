@@ -94,7 +94,7 @@ func tokenize() []*Token {
 			}
 			tokens = append(tokens, token)
 			fmt.Printf("' %s ", token.value)
-		case ';':
+		case ';', '+', '-':
 			token := &Token{
 				kind:  "punct",
 				value: string([]byte{char}),
