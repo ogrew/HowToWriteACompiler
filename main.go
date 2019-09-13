@@ -98,11 +98,7 @@ func tokenize() []*Token {
 	return tokens
 }
 
-func main() {
-	// 標準入力を受け取る
-	src, _ = ioutil.ReadAll(os.Stdin)
-
-	tokens = tokenize()
+func parse() *Expr {
 	token0 := tokens[0]
 
 	intval, _ := strconv.Atoi(token0.value)
@@ -110,9 +106,22 @@ func main() {
 		kind:   "intliteral",
 		intval: intval,
 	}
+	return expr
+}
 
+func generateAssembly(expr *Expr) {
 	fmt.Printf("  .global main\n")
 	fmt.Printf("main:\n")
 	fmt.Printf("  movq $%d, %%rax\n", expr.intval)
 	fmt.Printf("  ret\n")
+}
+
+func main() {
+	// 標準入力を受け取る
+	src, _ = ioutil.ReadAll(os.Stdin)
+
+	tokens = tokenize()
+	expr := parse()
+	generateAssembly(expr)
+
 }
