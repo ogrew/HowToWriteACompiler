@@ -83,11 +83,12 @@ func tokenize() []*Token {
 }
 
 func main() {
-	var src []byte
 	// 標準入力を受け取る
 	src, _ = ioutil.ReadAll(os.Stdin)
-	input := string(src)
-	num, err := strconv.Atoi(input)
+
+	tokens := tokenize()
+	token0 := tokens[0]
+	num, err := strconv.Atoi(token0.value)
 	if err != nil {
 		panic(err)
 	}
