@@ -114,20 +114,79 @@ func tokenize() []*Token {
 
 // 単項式の解析
 func parseUnaryExpr() *Expr {
-	token0 := getToken()
-
-	intval, _ := strconv.Atoi(token0.value)
-	expr := &Expr{
-		kind:   "intliteral",
-		intval: intval,
+	token := getToken()
+	switch token.kind {
+	case "intliteral":
+		intval, _ := strconv.Atoi(token.value)
+		return &Expr{
+			kind:   "intliteral",
+			intval: intval,
+		}
+	case "punct":
+		operator := token.value
+		operand := parseUnaryExpr()
+		return &Expr{
+			kind:     "unary",
+			operator: operator,
+			operand:  operand,
+		}
+	default:
+		return nil
 	}
-	return expr
 }
 
 // パーサー本体
 func parse() *Expr {
 	expr := parseUnaryExpr()
-	return expr
+
+	for {
+		token := getToken()
+		if token == nil || token.value == ";" {
+			return expr
+		}
+
+		switch token.value {
+		case "+", "-":
+			return &Expr{
+				kind:     "binary",
+				operator: token.value,
+				left:     expr,
+				right:    parseUnaryExpr(),
+			}
+		default:
+			return expr
+		}
+	}
+}
+
+func generateExpr(expr *Expr) {
+	switch expr.kind {
+	case "intliteral":
+		fmt.Printf("  mov $%d, %%rax\n", expr.intval)
+	case "unary":
+		switch expr.operator {
+		case "-":
+			fmt.Printf("  mov $-%d, %%rax\n", expr.operand.intval)
+		case "+":
+			fmt.Printf("  mov $+%d, %%rax\n", expr.operand.intval)
+		default:
+			panic("generator: Unknown unary operator:" + expr.operator)
+		}
+	case "binary":
+		fmt.Printf("  mov $%d, %%rax\n", expr.left.intval)
+		fmt.Printf("  mov $%d, %%rcx\n", expr.right.intval)
+
+		switch expr.operator {
+		case "+":
+			fmt.Printf("  add %%rcx, %%rax\n")
+		case "-":
+			fmt.Printf("  sub %%rcx, %%rax\n")
+		default:
+			panic("generator: Unknown binary operator:" + expr.operator)
+		}
+	default:
+		panic("generator: Unknown expr.kind:" + expr.kind)
+	}
 }
 
 func generateAssembly(expr *Expr) {
