@@ -1,11 +1,29 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strconv"
 )
+
+var src []byte
+var srcIdx int
+
+// getChar srcのsrcIdx番目のものを返す君
+func getChar() (byte, error) {
+	if srcIdx == len(src) {
+		return 0, errors.New("EOF")
+	}
+	char := src[srcIdx]
+	srcIdx++
+	return char, nil
+}
+
+func ungetChar() {
+	srcIdx--
+}
 
 type Token struct {
 	kind  string // intliteral
