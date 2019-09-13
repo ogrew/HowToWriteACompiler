@@ -108,7 +108,8 @@ func tokenize() []*Token {
 	return tokens
 }
 
-func parse() *Expr {
+// 単項式の解析
+func parseUnaryExpr() *Expr {
 	token0 := getToken()
 
 	intval, _ := strconv.Atoi(token0.value)
@@ -116,6 +117,12 @@ func parse() *Expr {
 		kind:   "intliteral",
 		intval: intval,
 	}
+	return expr
+}
+
+// パーサー本体
+func parse() *Expr {
+	expr := parseUnaryExpr()
 	return expr
 }
 
