@@ -28,6 +28,7 @@ func ungetChar() {
 var tokens []*Token
 var tokenIdx int
 
+// getToken token列のtokenIdx番目のものを返す君
 func getToken() *Token {
 	if tokenIdx == len(tokens) {
 		return nil
@@ -74,6 +75,7 @@ func readNumber(char byte) string {
 	return string(num)
 }
 
+// tokenize tokenを解析する君
 func tokenize() []*Token {
 	var tokens []*Token
 	fmt.Printf("#Tokens : ")
@@ -112,7 +114,7 @@ func tokenize() []*Token {
 	return tokens
 }
 
-// 単項式の解析
+// parseUnaryExpr 単項式の解析をしてくれる君
 func parseUnaryExpr() *Expr {
 	token := getToken()
 	switch token.kind {
@@ -135,7 +137,7 @@ func parseUnaryExpr() *Expr {
 	}
 }
 
-// パーサー本体
+// parse パーサー本体
 func parse() *Expr {
 	expr := parseUnaryExpr()
 
@@ -159,6 +161,7 @@ func parse() *Expr {
 	}
 }
 
+// generateExpr アセンブリで計算式部分を吐く君
 func generateExpr(expr *Expr) {
 	switch expr.kind {
 	case "intliteral":
@@ -189,6 +192,7 @@ func generateExpr(expr *Expr) {
 	}
 }
 
+// generateAssembly アセンブリコードを吐く君
 func generateAssembly(expr *Expr) {
 	fmt.Printf("  .global main\n")
 	fmt.Printf("main:\n")
