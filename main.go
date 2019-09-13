@@ -11,6 +11,8 @@ import (
 var src []byte
 var srcIdx int
 
+var tokens []*Token
+
 // getChar srcのsrcIdx番目のものを返す君
 func getChar() (byte, error) {
 	if srcIdx == len(src) {
@@ -29,6 +31,12 @@ func ungetChar() {
 type Token struct {
 	kind  string // "intliteral", "punct"
 	value string
+}
+
+// Expr is XXX
+type Expr struct {
+	kind   string // "intliteral"
+	intval int    // for intliteral
 }
 
 // readNumber 数値列を最後まで読み取る君
@@ -74,7 +82,7 @@ func tokenize() []*Token {
 			fmt.Printf("' %s ", token.value)
 		case ';':
 			token := &Token{
-				kind: "punct",
+				kind:  "punct",
 				value: string([]byte{char}),
 			}
 			tokens = append(tokens, token)
@@ -94,15 +102,17 @@ func main() {
 	// 標準入力を受け取る
 	src, _ = ioutil.ReadAll(os.Stdin)
 
-	tokens := tokenize()
+	tokens = tokenize()
 	token0 := tokens[0]
-	num, err := strconv.Atoi(token0.value)
-	if err != nil {
-		panic(err)
+
+	intval, _ := strconv.Atoi(token0.value)
+	expr := &Expr{
+		kind:   "intliteral",
+		intval: intval,
 	}
 
 	fmt.Printf("  .global main\n")
 	fmt.Printf("main:\n")
-	fmt.Printf("  movq $%d, %%rax\n", num)
+	fmt.Printf("  movq $%d, %%rax\n", expr.intval)
 	fmt.Printf("  ret\n")
 }
