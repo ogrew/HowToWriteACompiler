@@ -11,8 +11,6 @@ import (
 var src []byte
 var srcIdx int
 
-var tokens []*Token
-
 // getChar srcのsrcIdx番目のものを返す君
 func getChar() (byte, error) {
 	if srcIdx == len(src) {
@@ -25,6 +23,18 @@ func getChar() (byte, error) {
 
 func ungetChar() {
 	srcIdx--
+}
+
+var tokens []*Token
+var tokenIdx int
+
+func getToken() *Token {
+	if tokenIdx == len(tokens) {
+		return nil
+	}
+	token := tokens[tokenIdx]
+	tokenIdx++
+	return token
 }
 
 // Token is XXX
@@ -99,7 +109,7 @@ func tokenize() []*Token {
 }
 
 func parse() *Expr {
-	token0 := tokens[0]
+	token0 := getToken()
 
 	intval, _ := strconv.Atoi(token0.value)
 	expr := &Expr{
