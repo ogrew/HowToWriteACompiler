@@ -78,7 +78,7 @@ func readNumber(char byte) string {
 // tokenize tokenを解析する君
 func tokenize() []*Token {
 	var tokens []*Token
-	fmt.Printf("#Tokens : ")
+	fmt.Printf("#Tokens:")
 
 	for {
 		char, err := getChar()
@@ -95,14 +95,14 @@ func tokenize() []*Token {
 				value: intLiteral,
 			}
 			tokens = append(tokens, token)
-			fmt.Printf("' %s ", token.value)
+			fmt.Printf(" '%s'", token.value)
 		case ';', '+', '-', '*', '/':
 			token := &Token{
 				kind:  "punct",
 				value: string([]byte{char}),
 			}
 			tokens = append(tokens, token)
-			fmt.Printf("' %s ", token.value)
+			fmt.Printf(" '%s'", token.value)
 		case ' ', '\t', 'n':
 			continue
 		default:
