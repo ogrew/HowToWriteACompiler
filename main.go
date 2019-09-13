@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+type Token struct {
+	kind  string // intliteral
+	value string
+}
+
 func main() {
 	var src []byte
 	// 標準入力を受け取る
