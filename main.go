@@ -45,8 +45,12 @@ type Token struct {
 
 // Expr is XXX
 type Expr struct {
-	kind   string // "intliteral"
-	intval int    // for intliteral
+	kind     string // "intliteral", "unary"
+	intval   int    // for intliteral
+	operator string // "+", "-", ...
+	operand  *Expr  // for unary expression
+	left     *Expr  // for binary expr
+	right    *Expr  // for binary expr
 }
 
 // readNumber 数値列を最後まで読み取る君
