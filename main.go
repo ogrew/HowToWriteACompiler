@@ -30,6 +30,58 @@ type Token struct {
 	value string
 }
 
+// readNumber 数値列を最後まで読み取る君
+func readNumber(char byte) string {
+	num := []byte{char}
+	for {
+		char, err := getChar()
+		if err != nil {
+			// 最後まで読み取りきった場合は終了
+			break
+		}
+		if '0' <= char && char <= '9' {
+			num = append(num, char)
+		} else {
+			// 数値以外が来た場合は終了
+			ungetChar()
+			break
+		}
+	}
+
+	return string(num)
+}
+
+func tokenize() []*Token {
+	var tokens []*Token
+	fmt.Printf("#Tokens : ")
+
+	for {
+		char, err := getChar()
+		// もう終わり
+		if err != nil {
+			break
+		}
+
+		switch char {
+		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
+			intLiteral := readNumber(char)
+			token := &Token{
+				kind:  "intLiteral",
+				value: intLiteral,
+			}
+			tokens = append(tokens, token)
+			fmt.Printf("' %s ", token.value)
+		case ' ', '\t', 'n':
+			continue
+		default:
+			panic(fmt.Sprintf("tokenize error: Invalid Input: '%c'", char))
+		}
+	}
+
+	fmt.Printf("\n\n")
+	return tokens
+}
+
 func main() {
 	var src []byte
 	// 標準入力を受け取る
