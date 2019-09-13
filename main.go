@@ -192,7 +192,7 @@ func generateExpr(expr *Expr) {
 func generateAssembly(expr *Expr) {
 	fmt.Printf("  .global main\n")
 	fmt.Printf("main:\n")
-	fmt.Printf("  movq $%d, %%rax\n", expr.intval)
+	generateExpr(expr)
 	fmt.Printf("  ret\n")
 }
 
@@ -203,5 +203,4 @@ func main() {
 	tokens = tokenize()
 	expr := parse()
 	generateAssembly(expr)
-
 }
