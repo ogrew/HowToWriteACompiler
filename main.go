@@ -25,8 +25,9 @@ func ungetChar() {
 	srcIdx--
 }
 
+// Token is XXX
 type Token struct {
-	kind  string // intliteral
+	kind  string // "intliteral", "punct"
 	value string
 }
 
@@ -66,8 +67,15 @@ func tokenize() []*Token {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
 			intLiteral := readNumber(char)
 			token := &Token{
-				kind:  "intLiteral",
+				kind:  "intliteral",
 				value: intLiteral,
+			}
+			tokens = append(tokens, token)
+			fmt.Printf("' %s ", token.value)
+		case ';':
+			token := &Token{
+				kind: "punct",
+				value: string([]byte{char}),
 			}
 			tokens = append(tokens, token)
 			fmt.Printf("' %s ", token.value)
